@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configs
-DATE=$(date +%_d_%m_%Y)
+DATE=$(date +%_d_%m_%Y) # Set date format. I use this for file names.
 
 DIRS="home bin lib32 run usr boot etc lib lib64 opt root sbin var" # Add base dir
 EXCLUDE_DIRS="/home/walker/Downloads/* /var/tmp/* /usr/portage/* /var/log/*" # Add exclude dirs
