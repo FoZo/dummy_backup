@@ -18,17 +18,6 @@ function check_user {
 	fi
 }
 
-function check_process {
-
-	if ps -a|grep dummy_backup.sh ; then
-		echo "Starting dummy backup."
-	else
-		
-		echo "This backup script is allredy running!"
-		exit
-	fi
-}
-
 function mount_nfs {
 	
 # 1. Mount Bakup
@@ -99,10 +88,9 @@ function mk_backup {
 
 echo "Start backuping"
 check_user
-check_process
 mount_nfs
 check_backup_type
 mkback_dir
 mk_backup
-umount /mnt/Backup/
+#umount /mnt/Backup/
 echo "Finish backuping"
