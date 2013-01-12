@@ -3,11 +3,11 @@
 # Configs
 DATE=$(date +%_d_%m_%Y)
 
-DIRS="home bin lib32 run usr boot etc lib lib64 opt root sbin var"
-EXCLUDE_DIRS="/home/walker/Downloads/* /var/tmp/* /usr/portage/* /var/log/*"
+DIRS="home bin lib32 run usr boot etc lib lib64 opt root sbin var" # Add base dir
+EXCLUDE_DIRS="/home/walker/Downloads/* /var/tmp/* /usr/portage/* /var/log/*" # Add exclude dirs
 
 SERVER_NAME="acer_latop" # Set name for backup dir
-NFS_SERVER_IP="set NFS server"
+NFS_SERVER_IP="set NFS server" # Set NFS server ip address
 PASSPHRASE="test-$DATE" # Set passphrase for gpg encryption
 BACKUP_DIR="/mnt/Backup/backup-$SERVER_NAME/$DATE" # Set path to backup dir
 
