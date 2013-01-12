@@ -28,7 +28,7 @@ function mount_nfs {
                 echo " Mount exist, skipping this step"
         elif ping -c 1 $NFS_SERVER_IP -q 2>&1 | grep "0% packet" 2>&1 ; then
                 echo "Mounting nfs backup"
-                if ! mount.nfs $NFS_SERVER_IP:/volume1/NetBackup /mnt/Backup/ -o nolock 2>&1 ; then
+                if ! /sbin/mount.nfs $NFS_SERVER_IP:/volume1/NetBackup /mnt/Backup/ -o nolock 2>&1 ; then
                         echo " Can't mount nfs"
                         exit
                 fi
