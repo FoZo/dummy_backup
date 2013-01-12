@@ -89,8 +89,8 @@ function mk_backup {
 echo "Start backuping"
 check_user
 mount_nfs
-check_backup_type
 mkback_dir
+check_backup_type
 mk_backup
 #umount /mnt/Backup/
 echo "Finish backuping"
