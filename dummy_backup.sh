@@ -86,11 +86,11 @@ function mk_backup {
 	done
 }
 
-echo "Start backuping"
+echo "Start backuping at `date`."
 check_user
 mount_nfs
 mkback_dir
 check_backup_type
 mk_backup
 #umount /mnt/Backup/
-echo "Finish backuping"
+echo "Finish backuping at `date`."
