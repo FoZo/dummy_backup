@@ -21,9 +21,9 @@ function check_user {
 function mount_nfs {
 	
 # 1. Mount Bakup
-	if mount|grep '/volume1/NetBackup' &> /dev/null ; then
+	if mount|grep '/volume1/NetBackup' 2>&1 ; then
                 echo "Mount exist, skipping this step"
-	elif ping -c 1 192.168.1.125 -q &> /dev/null ; then
+	elif ping -c 1 192.168.1.125 -q 2>&1 ; then
 		echo "Mounting nfs backup"
 		if ! mount.nfs 192.168.1.125:/volume1/NetBackup /mnt/Backup/ -o nolock ; then
 			echo "Can't mount nfs"
@@ -74,12 +74,12 @@ function mk_backup {
 	do
 		if [ $BACKUP_T != "i" ] ; then
 			if [ ! -f $BACKUP_DIR/$DIR.`date +%_d-%m-%Y`.f.ok ] ; then
-				tar czvf - /$DIR $EXCLUDE &> /dev/null | gpg2 -c --batch --yes --passphrase t -o $BACKUP_DIR/$DIR.`date +%_d-%m-%Y`.f.tar.gz.gpg
+				tar czvf - /$DIR $EXCLUDE 2>&1 | gpg2 -c --batch --yes --passphrase t -o $BACKUP_DIR/$DIR.`date +%_d-%m-%Y`.f.tar.gz.gpg
 				touch /mnt/Backup/$DIR.`date +%_d-%m-%Y`.f.ok
 			fi
 		else
 			if [ ! -f $BACKUP_DIR/$DIR.`date +%_d-%m-%Y`.i.ok ] ; then
-				tar czvf - /$DIR --newer-mtime='1' $EXCLUDE &> /dev/null | gpg2 -c --batch --yes --passphrase t -o $BACKUP_DIR/$DIR.`date +%_d-%m-%Y`.i.tar.gz.gpg
+				tar czvf - /$DIR --newer-mtime='1' $EXCLUDE 2>&1 | gpg2 -c --batch --yes --passphrase t -o $BACKUP_DIR/$DIR.`date +%_d-%m-%Y`.i.tar.gz.gpg
                         	touch $BACKUP_DIR/$DIR.`date +%_d-%m-%Y`.i.ok
 			fi
 		fi
