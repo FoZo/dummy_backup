@@ -41,7 +41,7 @@ function mkback_dir {
 	if [ -d $BACKUP_DIR ] ; then
 		echo "Backup dir exist"
 	else
-		echo "Macking $BACKUP_DIR"
+		echo "Making $BACKUP_DIR"
 		mkdir -p $BACKUP_DIR
 	fi
 
@@ -50,7 +50,7 @@ function mkback_dir {
 function check_backup_type {
 
 	if [ $(date +%u) != "7" ] ; then
-		echo "Macking incremental backup"
+		echo "Making incremental backup"
 		BACKUP_T="i"
 	else
 		echo "Backing full backup"
