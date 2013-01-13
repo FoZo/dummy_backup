@@ -78,7 +78,7 @@ function mk_backup {
                 if [ $BACKUP_T != "i" ] ; then
                         if [ ! -f $BACKUP_DIR/$DIR.`date +%_d-%m-%Y`.f.ok ] ; then
                                 tar czvf - /$DIR $EXCLUDE 2>&1 | gpg2 -c --batch --yes --passphrase t -o $BACKUP_DIR/$DIR.`date +%_d-%m-%Y`.f.tar.gz.gpg
-                                touch /mnt/Backup/$DIR.`date +%_d-%m-%Y`.f.ok
+                                touch $BACKUP_DIR/$DIR.`date +%_d-%m-%Y`.f.ok
                         fi
                 else
                         if [ ! -f $BACKUP_DIR/$DIR.`date +%_d-%m-%Y`.i.ok ] ; then
