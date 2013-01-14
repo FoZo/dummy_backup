@@ -8,7 +8,7 @@ EXCLUDE_DIRS="/home/walker/Downloads/* /var/tmp/* /usr/portage/* /var/log/*" # A
 
 SERVER_NAME="acer_latop" # Set name for backup dir
 NFS_SERVER_IP="set NFS server" # Set NFS server ip address
-PASSPHRASE="test-$DATE" # Set passphrase for gpg encryption
+PASSPHRASE="$DATE" # Set passphrase for gpg encryption
 BACKUP_DIR="/mnt/Backup/backup-$SERVER_NAME/$DATE" # Set path to backup dir
 
 
