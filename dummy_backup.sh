@@ -77,12 +77,12 @@ function mk_backup {
         do
                 if [ $BACKUP_T != "i" ] ; then
                         if [ ! -f $BACKUP_DIR/$DIR.`date +%_d-%m-%Y`.f.ok ] ; then
-                                tar czvf - /$DIR $EXCLUDE 2>&1 | gpg2 -c --batch --yes --passphrase $PASSPHRASE -o $BACKUP_DIR/$DIR.`date +%_d-%m-%Y`.f.tar.gz.gpg
+                                tar czvf - /$DIR $EXCLUDE | gpg2 -c --batch --yes --passphrase $PASSPHRASE -o $BACKUP_DIR/$DIR.`date +%_d-%m-%Y`.f.tar.gz.gpg
                                 touch $BACKUP_DIR/$DIR.`date +%_d-%m-%Y`.f.ok
                         fi
                 else
                         if [ ! -f $BACKUP_DIR/$DIR.`date +%_d-%m-%Y`.i.ok ] ; then
-                                tar czvf - /$DIR --newer-mtime='1' $EXCLUDE 2>&1 | gpg2 -c --batch --yes --passphrase $PASSPHRASE -o $BACKUP_DIR/$DIR.`date +%_d-%m-%Y`.i.tar.gz.gpg
+                                tar czvf - /$DIR --newer-mtime='1' $EXCLUDE | gpg2 -c --batch --yes --passphrase $PASSPHRASE -o $BACKUP_DIR/$DIR.`date +%_d-%m-%Y`.i.tar.gz.gpg
                                 touch $BACKUP_DIR/$DIR.`date +%_d-%m-%Y`.i.ok
                         fi
                 fi
