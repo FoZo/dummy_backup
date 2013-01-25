@@ -12,11 +12,16 @@ PASSPHRASE="$DATE" # Set passphrase for gpg encryption
 BACKUP_DIR="/mnt/Backup/backup-$SERVER_NAME/$DATE" # Set path to backup dir
 
 
-
-function check_user {
+function checks {
 
         if [ "$(whoami)" != "root" ] ; then
                 echo "Only root can run this backup script"
+                exit
+        fi
+
+        if [ -f /tmp/dummy_backup.$DATE.ok ] ; then
+                echo "You have already made a backup today"
+                echo "-------------------------"
                 exit
         fi
 }
@@ -26,9 +31,9 @@ function mount_nfs {
         echo "Mount NFS"
         if mount|grep '/volume1/NetBackup' 2>&1 ; then
                 echo " Mount exist, skipping this step"
-        elif ping -c 1 $NFS_SERVER_IP -q 2>&1 | grep "1 received" 2>&1 ; then
+        elif ping -c 1 $NFS_SERVER_IP -q 2>&1|grep "1 received" 2>&1; then
                 echo "Mounting nfs backup"
-                if ! /sbin/mount.nfs $NFS_SERVER_IP:/volume1/NetBackup /mnt/Backup/ -o nolock 2>&1 ; then
+                if ! /sbin/mount.nfs $NFS_SERVER_IP:/volume1/NetBackup /mnt/Backup/ -o nolock ; then
                         echo " Can't mount nfs"
                         exit
                 fi
@@ -36,18 +41,6 @@ function mount_nfs {
                 echo " Can't mount"
                 exit 0
         fi
-}
-
-function mkback_dir {
-
-        echo "Making Backup dir"
-        if [ -d $BACKUP_DIR ] ; then
-                echo " Backup dir exist"
-        else
-                echo " Making $BACKUP_DIR"
-                mkdir -p $BACKUP_DIR
-        fi
-
 }
 
 function check_backup_type {
@@ -62,6 +55,19 @@ function check_backup_type {
 
 }
 
+function mkback_dir {
+
+        echo "Making Backup dir"
+        if [ -d $BACKUP_DIR.$BACKUP_T ] ; then
+                echo " Backup dir exist"
+        else
+                echo " Making $BACKUP_DIR.$BACKUP_T"
+                mkdir -p $BACKUP_DIR.$BACKUP_T
+        fi
+
+}
+
+
 function mk_backup {
 
         echo "Create backup files"
@@ -75,27 +81,29 @@ function mk_backup {
 
         for DIR in $DIRS
         do
-                if [ $BACKUP_T != "i" ] ; then
-                        if [ ! -f $BACKUP_DIR/$DIR.`date +%_d-%m-%Y`.f.ok ] ; then
-                                tar czvf - /$DIR $EXCLUDE | gpg2 -c --batch --yes --passphrase $PASSPHRASE -o $BACKUP_DIR/$DIR.`date +%_d-%m-%Y`.f.tar.gz.gpg
-                                touch $BACKUP_DIR/$DIR.`date +%_d-%m-%Y`.f.ok
+                if [ $BACKUP_T == "f" ] ; then
+                        if [ ! -f $BACKUP_DIR.f/$DIR.$DATE.f.ok ] ; then
+                                tar czf - /$DIR $EXCLUDE | gpg2 -c --batch --yes --passphrase $PASSPHRASE -o $BACKUP_DIR.f/$DIR.$DATE.f.tar.gz.gpg
+                                touch $BACKUP_DIR.f/$DIR.$DATE.f.ok
+                                echo "$DIR.$DATE.f.tar.gz.gpg Done"
                         fi
                 else
-                        if [ ! -f $BACKUP_DIR/$DIR.`date +%_d-%m-%Y`.i.ok ] ; then
-                                tar czvf - /$DIR --newer-mtime='1' $EXCLUDE | gpg2 -c --batch --yes --passphrase $PASSPHRASE -o $BACKUP_DIR/$DIR.`date +%_d-%m-%Y`.i.tar.gz.gpg
-                                touch $BACKUP_DIR/$DIR.`date +%_d-%m-%Y`.i.ok
+                        if [ ! -f $BACKUP_DIR.i/$DIR.`date +%_d-%m-%Y`.i.ok ] ; then
+                                tar czf - /$DIR --newer-mtime='1' $EXCLUDE | gpg2 -c --batch --yes --passphrase $PASSPHRASE -o $BACKUP_DIR.i/$DIR.$DATE.i.tar.gz.gpg
+                                touch $BACKUP_DIR.i/$DIR.$DATE.i.ok
+                                echo "$DIR.$DATE.i.tar.gz.gpg Done"
                         fi
                 fi
         done
+        touch /tmp/dummy_backup.$DATE.ok
 }
 
 echo "-------------------------"
 echo "Start backuping at `date`."
-check_user
+checks
 mount_nfs
-mkback_dir
 check_backup_type
+mkback_dir
 mk_backup
 umount /mnt/Backup/
-echo "Finish backuping at `date`."
-echo "-------------------------"
+echo "Finish backuping at `date`.
